@@ -6,7 +6,9 @@ import PropTypes from 'prop-types'
 
 export default class Comment extends React.Component {
   static propTypes = {
-    comment: PropTypes.object.isRequired
+    comment: PropTypes.object.isRequired, // 评论对象
+    onDeleteComment: PropTypes.func, // 删除的函数
+    index: PropTypes.number // 当前评论对象在评论列表的索引
   }
   constructor(props) {
     super(props);
@@ -31,6 +33,12 @@ export default class Comment extends React.Component {
       timeString: duration > 60 ? `${Math.round(duration / 60)} 分钟前` : `${Math.round(Math.max(duration, 1))} 秒前`
     })
   }
+  handleDeleteComment(){
+    let {onDeleteComment, index} = this.props;
+    if(onDeleteComment){
+      onDeleteComment(index)
+    }
+  }
 
   render() {
     let {props} = this;
@@ -43,18 +51,12 @@ export default class Comment extends React.Component {
         <span className='comment-createdtime'>
           {this.state.timeString}
         </span>
+        <span
+          onClick={this.handleDeleteComment.bind(this)}
+          className='comment-delete'>
+          删除
+        </span>
       </div>
     )
   }
 }
-// export default function Comment(props){
-//   return (
-//     <div className='comment'>
-//       <div className='comment-user'>
-//         <span>{props.comment.username} </span>:
-//       </div>
-//       <p>{props.comment.content}</p>
-//     </div>
-//   )
-// }
-
