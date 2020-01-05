@@ -39,7 +39,15 @@ export default class Comment extends React.Component {
       onDeleteComment(index)
     }
   }
-
+  _getProcessedContent(content){
+    return content
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;")
+      .replace(/`([\S\s]+?)`/g, '<code>$1</code>')
+  }
   render() {
     let {props} = this;
     return (
@@ -47,7 +55,9 @@ export default class Comment extends React.Component {
         <div className='comment-user'>
           <span>{props.comment.username} </span>:
         </div>
-        <p>{props.comment.content}</p>
+        <p dangerouslySetInnerHTML={{
+          __html: this._getProcessedContent(props.comment.content)
+        }} />
         <span className='comment-createdtime'>
           {this.state.timeString}
         </span>
