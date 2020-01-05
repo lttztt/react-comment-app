@@ -17,6 +17,18 @@ export default class CommentInput extends Component {
       username: value
     })
   }
+  usernameBlur(e){
+    this._saveUsername(e.target.value)
+  }
+  _saveUsername(value){
+    localStorage.setItem('username', value)
+  }
+  _loadUsername(){
+    let username = localStorage.getItem('username') || '';
+    this.setState({
+      username
+    })
+  }
   contentChange(e){
     let value = e.target.value
     this.setState({
@@ -32,6 +44,13 @@ export default class CommentInput extends Component {
       })
     }
   }
+  UNSAFE_componentWillMount() {
+    this._loadUsername()
+  }
+
+  componentDidMount() {
+    this.textarea.focus()
+  }
   render() {
     return (
       <div className='comment-input'>
@@ -40,6 +59,7 @@ export default class CommentInput extends Component {
           <div className='comment-field-input'>
             <input
               onChange={this.usernameChange.bind(this)}
+              onBlur={this.usernameBlur.bind(this)}
               value={this.state.username} />
           </div>
         </div>
@@ -47,6 +67,7 @@ export default class CommentInput extends Component {
           <span className='comment-field-name'>评论内容：</span>
           <div className='comment-field-input'>
             <textarea
+              ref={(textarea)=> this.textarea = textarea}
               onChange={this.contentChange.bind(this)}
               value={this.state.content} />
           </div>
