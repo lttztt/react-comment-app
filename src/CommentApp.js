@@ -12,11 +12,27 @@ class CommentApp extends Component {
       comments: []
     }
   }
+  UNSAFE_componentWillMount() {
+    this._loadComments()
+  }
+  _loadComments() {
+    let comments = localStorage.getItem('comments');
+    if(comments){
+      comments = JSON.parse(comments)
+      this.setState({ comments })
+    }
+  }
+  _saveComments(comments){
+    localStorage.setItem('comments', JSON.stringify(comments))
+  }
   getInputData(comment){
-    this.state.comments.push(comment)
-    this.setState({
-      comments: this.state.comments
-    })
+    if(!comment) return
+    if(!comment.username) return alert('请输入用户名')
+    if(!comment.content) return alert('请输入评论内容')
+    let {comments} = this.state;
+    comments.push(comment);
+    this._saveComments(comments);
+    this.setState({ comments });
   }
   render(){
     return (
